@@ -29,7 +29,6 @@ int numThread;
 int numAcquire;
 int numRelease;
 
-File *fp;
 
 uint32_t jenkins_one_at_a_time_hash(const uint8_t* key, size_t length) {
   size_t i = 0;
@@ -81,16 +80,3 @@ void search(char *name)
     rwlock_release_writelock(&lock);
     numRelease++;
 }
-
-void readFromFIle()
-{
-  rwlock_init(&lock);
-  hashSize = 0;
-  numThread = 0;
-  numRelease = 0;
-  int i = 0;
-
-  
-
-}
-    
