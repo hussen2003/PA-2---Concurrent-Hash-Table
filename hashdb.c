@@ -15,13 +15,6 @@ typedef struct hash_struct
   struct hash_struct *next;
 } hashRecord;
 
-typedef struct arg_struct
-{
-    char name[50];
-    char commands[8];
-    uint32_t salary;
-} ThreadArg;
-
 rwlock_t lock;
 hashRecord *hashTable;
 int hashSize;
