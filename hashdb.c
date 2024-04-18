@@ -50,7 +50,7 @@ void insert(char *name, uint32_t salary)
     rwlock_acquire_writelock(&lock);
     numAcquire++;
 
-    //programming stuff here
+    //insert programming stuff here
 
     rwlock_release_writelock(&lock);
     numRelease++;
@@ -63,7 +63,7 @@ void delete(char *name)
     rwlock_acquire_writelock(&lock);
     numAcquire++;
 
-    //programming stuff here
+    //delete programming stuff here
 
     rwlock_release_writelock(&lock);
     numRelease++;
@@ -75,7 +75,19 @@ void search(char *name)
     rwlock_acquire_writelock(&lock);
     numAcquire++;
 
-    //programming stuff here
+    //search programming stuff here
+
+    rwlock_release_writelock(&lock);
+    numRelease++;
+}
+
+void print() 
+{
+    uint32_t hashValue = jenkins_one_at_a_time_hash((const uint8_t *)name, strlen(name));
+    rwlock_acquire_writelock(&lock);
+    numAcquire++;
+
+    //print programming stuff here
 
     rwlock_release_writelock(&lock);
     numRelease++;
