@@ -17,8 +17,8 @@ typedef struct hash_struct
 
 typedef struct arg_struct
 {
-    char command[10];
     char name[50];
+    char commands[8];
     uint32_t salary;
 } ThreadArg;
 
