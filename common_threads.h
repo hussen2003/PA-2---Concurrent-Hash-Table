@@ -1,9 +1,9 @@
 #ifndef __common_threads_h__
 #define __common_threads_h__
 
-#include <pthread.h>
+
 #include <assert.h>
-#include <sched.h>
+
 
 #ifdef __linux__
 #include <semaphore.h>
