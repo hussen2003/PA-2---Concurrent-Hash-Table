@@ -8,6 +8,9 @@
 hashRecord *hashTable[1000]; // Assuming the size of the hash table is 1000
 pthread_rwlock_t rwlock;
 
+int num_acquistions = 0;
+int num_releases = 0;
+
 uint32_t hash_function(char *str) {
     const uint8_t* key = (const uint8_t *)str;
     size_t length = strlen(str);
@@ -28,7 +31,7 @@ uint32_t hash_function(char *str) {
 void insert(char *name, uint32_t salary, FILE *file) {
     fprintf(file, "WRITE LOCK ACQUIRED\n");
     pthread_rwlock_wrlock(&rwlock);  // Lock the mutex before inserting
-
+    num_acquistions++;
     uint32_t index = hash_function(name);
     hashRecord *newnode = malloc(sizeof(hashRecord));
     strcpy(newnode->name, name);
@@ -53,7 +56,7 @@ void insert(char *name, uint32_t salary, FILE *file) {
 void delete(char *name, FILE *file) {
     fprintf(file, "WRITE LOCK ACQUIRED\n");
     pthread_rwlock_wrlock(&rwlock);  // Acquire a write lock
-
+    num_acquistions++;
     uint32_t index = hash_function(name);
     hashRecord *temp = hashTable[index], *prev;
 

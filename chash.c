@@ -32,6 +32,12 @@ int main() {
         char *command = strtok(line, ",");
         char *name = strtok(NULL, ",");
         char *salary = strtok(NULL, ",");
+        int num_threads = 0;
+
+        if (strcmp(command, "threads") == 0) {
+            num_threads = atoi(name); 
+            printf("Running %d threads\n", num_threads);
+        }
 
         if (strcmp(command, "insert") == 0) {
             fprintf(outputFile, "INSERT,%s,%s\n", name, salary);

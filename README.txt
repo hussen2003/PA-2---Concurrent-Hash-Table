@@ -1,1 +1,3 @@
-Use for anything I or my graders need to know and the AI use citation 
+To run:
+gcc -o chash chash.c hashdb.c rwlocks.c -lpthread
+then './chash'
