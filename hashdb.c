@@ -7,7 +7,7 @@
 
 
 hashRecord *hashTable[1000]; // Assuming the size of the hash table is 1000
-pthread_mutex_t lock;
+pthread_rwlock_t rwlock;
 
 uint32_t hash_function(char *str) {
     uint32_t hash = 0;
@@ -19,7 +19,11 @@ uint32_t hash_function(char *str) {
     return hash % 1000;
 }
 
+
 void insert(char *name, uint32_t salary) {
+    printf("WRITE LOCK ACQUIRED\n");
+    pthread_rwlock_wrlock(&rwlock);  // Lock the mutex before inserting
+
     uint32_t index = hash_function(name);
     hashRecord *newnode = malloc(sizeof(hashRecord));
     strcpy(newnode->name, name);
@@ -36,41 +40,59 @@ void insert(char *name, uint32_t salary) {
         }
         current->next = newnode;
     }
+
+    pthread_rwlock_unlock(&rwlock);  // Unlock the mutex after inserting
+    printf("WRITE LOCK RELEASED\n");
 }
 
+
+
 void delete(char *name) {
-    int index = hash_function(name);
+    printf("WRITE LOCK ACQUIRED\n");
+    pthread_rwlock_wrlock(&rwlock);  // Acquire a write lock
+
+    uint32_t index = hash_function(name);
     hashRecord *temp = hashTable[index], *prev;
 
     if (temp != NULL && strcmp(temp->name, name) == 0) {
         hashTable[index] = temp->next;
         free(temp);
-        return;
+    } else {
+        while (temp != NULL && strcmp(temp->name, name) != 0) {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        if (temp == NULL) {
+            printf("%s not found\n", name);
+        } else {
+            prev->next = temp->next;
+            free(temp);
+        }
     }
 
-    while (temp != NULL && strcmp(temp->name, name) != 0) {
-        prev = temp;
-        temp = temp->next;
-    }
-
-    if (temp == NULL) return;
-
-    prev->next = temp->next;
-    free(temp);
+    pthread_rwlock_unlock(&rwlock);  // Release the write lock
+    printf("WRITE LOCK RELEASED\n");
 }
 
+
 hashRecord* search(char *name) {
+    printf("READ LOCK ACQUIRED\n");
+    pthread_rwlock_rdlock(&rwlock);
     int index = hash_function(name);
     hashRecord *current = hashTable[index];
 
     while (current != NULL) {
         if (strcmp(current->name, name) == 0) {
-            return current;
+            break;
         }
         current = current->next;
     }
-    return NULL;
+    pthread_rwlock_unlock(&rwlock);  // Release the read lock
+    printf("READ LOCK RELEASED\n");
+    return current;
 }
+
 
 void print() {
     for (int i = 0; i < 1000; i++) {

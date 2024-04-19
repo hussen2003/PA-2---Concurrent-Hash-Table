@@ -25,10 +25,13 @@ int main() {
         char *salary = strtok(NULL, ",");
 
         if (strcmp(command, "insert") == 0) {
-            insert(name, atoi(salary));
+        printf("INSERT,%s,%s\n", name, salary);
+        insert(name, atoi(salary));
         } else if (strcmp(command, "delete") == 0) {
+            printf("DELETE,%s\n", name);
             delete(name);
         } else if (strcmp(command, "search") == 0) {
+            printf("SEARCH,%s\n", name);
             hashRecord *record = search(name);
             if (record != NULL) {
                 printf("Found %s with salary %d\n", record->name, record->salary);
@@ -36,8 +39,10 @@ int main() {
                 printf("%s not found\n", name);
             }
         } else if (strcmp(command, "print") == 0) {
+            printf("PRINT\n");
             print();
         }
+
     }
 
     fclose(file);
