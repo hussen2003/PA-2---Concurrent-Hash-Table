@@ -10,6 +10,13 @@
 extern hashRecord *hashTable[1000];
 
 int main() {
+    // Open the output.txt file
+    FILE *outputFile = fopen("output.txt", "w");
+    if (outputFile == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
     // Initialize the hash table
     for (int i = 0; i < 1000; i++) {
         hashTable[i] = NULL;
@@ -18,6 +25,8 @@ int main() {
     // Read the commands.txt file and process the commands
     FILE *file = fopen("sample_input.txt", "r");
     char line[256];
+    int lockAcquisitions = 0;
+    int lockReleases = 0;
 
     while (fgets(line, sizeof(line), file)) {
         char *command = strtok(line, ",");
@@ -25,26 +34,33 @@ int main() {
         char *salary = strtok(NULL, ",");
 
         if (strcmp(command, "insert") == 0) {
-        printf("INSERT,%s,%s\n", name, salary);
-        insert(name, atoi(salary));
+            fprintf(outputFile, "INSERT,%s,%s\n", name, salary);
+            insert(name, atoi(salary), outputFile);
+            lockAcquisitions++;
         } else if (strcmp(command, "delete") == 0) {
-            printf("DELETE,%s\n", name);
-            delete(name);
+            fprintf(outputFile, "DELETE,%s\n", name);
+            delete(name, outputFile);
+            lockReleases++;
         } else if (strcmp(command, "search") == 0) {
-            printf("SEARCH,%s\n", name);
-            hashRecord *record = search(name);
+            fprintf(outputFile, "SEARCH,%s\n", name);
+            hashRecord *record = search(name, outputFile);
             if (record != NULL) {
-                printf("Found %s with salary %d\n", record->name, record->salary);
+                fprintf(outputFile, "%d,%s,%d\n", record->hash, record->name, record->salary);
             } else {
-                printf("%s not found\n", name);
+                fprintf(outputFile, "%s not found\n", name);
             }
         } else if (strcmp(command, "print") == 0) {
-            printf("PRINT\n");
-            print();
+            fprintf(outputFile, "PRINT\n");
+            print(outputFile);
         }
-
     }
 
+    fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquisitions);
+    fprintf(outputFile, "Number of lock releases: %d\n", lockReleases);
+    fprintf(outputFile, "Final Table:\n");
+    print(outputFile);
+
     fclose(file);
+    fclose(outputFile);  // Close the output.txt file
     return 0;
 }

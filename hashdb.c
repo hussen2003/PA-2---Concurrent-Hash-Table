@@ -1,27 +1,32 @@
-#include "hashdb.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-
+#include "hashdb.h"
 
 
 hashRecord *hashTable[1000]; // Assuming the size of the hash table is 1000
 pthread_rwlock_t rwlock;
 
 uint32_t hash_function(char *str) {
+    const uint8_t* key = (const uint8_t *)str;
+    size_t length = strlen(str);
+    size_t i = 0;
     uint32_t hash = 0;
-    int c;
-
-    while (c = *str++)
-        hash = c + (hash << 6) + (hash << 16) - hash;
-
-    return hash % 1000;
+    while (i != length) {
+        hash += key[i++];
+        hash += hash << 10;
+        hash ^= hash >> 6;
+    }
+    hash += hash << 3;
+    hash ^= hash >> 11;
+    hash += hash << 15;
+    return hash % 1000;  // Modulo operation to fit the hash table size
 }
 
 
-void insert(char *name, uint32_t salary) {
-    printf("WRITE LOCK ACQUIRED\n");
+void insert(char *name, uint32_t salary, FILE *file) {
+    fprintf(file, "WRITE LOCK ACQUIRED\n");
     pthread_rwlock_wrlock(&rwlock);  // Lock the mutex before inserting
 
     uint32_t index = hash_function(name);
@@ -42,13 +47,11 @@ void insert(char *name, uint32_t salary) {
     }
 
     pthread_rwlock_unlock(&rwlock);  // Unlock the mutex after inserting
-    printf("WRITE LOCK RELEASED\n");
+    fprintf(file, "WRITE LOCK RELEASED\n");
 }
 
-
-
-void delete(char *name) {
-    printf("WRITE LOCK ACQUIRED\n");
+void delete(char *name, FILE *file) {
+    fprintf(file, "WRITE LOCK ACQUIRED\n");
     pthread_rwlock_wrlock(&rwlock);  // Acquire a write lock
 
     uint32_t index = hash_function(name);
@@ -64,7 +67,7 @@ void delete(char *name) {
         }
 
         if (temp == NULL) {
-            printf("%s not found\n", name);
+            fprintf(file, "%s not found\n", name);
         } else {
             prev->next = temp->next;
             free(temp);
@@ -72,12 +75,12 @@ void delete(char *name) {
     }
 
     pthread_rwlock_unlock(&rwlock);  // Release the write lock
-    printf("WRITE LOCK RELEASED\n");
+    fprintf(file, "WRITE LOCK RELEASED\n");
 }
 
 
-hashRecord* search(char *name) {
-    printf("READ LOCK ACQUIRED\n");
+hashRecord* search(char *name, FILE *file) {
+    fprintf(file, "READ LOCK ACQUIRED\n");
     pthread_rwlock_rdlock(&rwlock);
     int index = hash_function(name);
     hashRecord *current = hashTable[index];
@@ -89,17 +92,18 @@ hashRecord* search(char *name) {
         current = current->next;
     }
     pthread_rwlock_unlock(&rwlock);  // Release the read lock
-    printf("READ LOCK RELEASED\n");
+    fprintf(file, "READ LOCK RELEASED\n");
     return current;
 }
 
 
-void print() {
+void print(FILE *file) {
     for (int i = 0; i < 1000; i++) {
         hashRecord *current = hashTable[i];
         while (current != NULL) {
-            printf("%s, %d\n", current->name, current->salary);
+            fprintf(file, "%s, %d\n", current->name, current->salary);
             current = current->next;
         }
     }
 }
+

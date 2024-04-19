@@ -14,9 +14,10 @@ typedef struct hash_struct {
 } hashRecord;
 
 uint32_t hash_function(char *str);
-void insert(char *name, uint32_t salary);
-void delete(char *name);
-hashRecord* search(char *name);
-void print();
+void insert(char *name, uint32_t salary, FILE *file);
+void delete(char *name, FILE *file);
+hashRecord* search(char *name, FILE *file);
+void print(FILE *file);
+
 
 #endif /* HASHDB_H */
