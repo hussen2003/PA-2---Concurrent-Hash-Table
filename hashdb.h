@@ -18,5 +18,6 @@ void insert(char *name, uint32_t salary);
 void delete(char *name);
 hashRecord* search(char *name);
 void print();
+void printfinal();
 
 #endif /* HASHDB_H */

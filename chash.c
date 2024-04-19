@@ -23,9 +23,15 @@ int main() {
         char *command = strtok(line, ",");
         char *name = strtok(NULL, ",");
         char *salary = strtok(NULL, ",");
+        int num_threads = 0;
+
+        if (strcmp(command, "threads") == 0) {
+            num_threads = atoi(name); 
+            printf("Running %d threads\n", num_threads);
+        }
 
         if (strcmp(command, "insert") == 0) {
-        printf("INSERT,%s,%s\n", name, salary);
+        printf("INSERT,%s,%s", name, salary);
         insert(name, atoi(salary));
         } else if (strcmp(command, "delete") == 0) {
             printf("DELETE,%s\n", name);
@@ -44,7 +50,10 @@ int main() {
         }
 
     }
+    
 
+    
+    printfinal();
     fclose(file);
     return 0;
 }
