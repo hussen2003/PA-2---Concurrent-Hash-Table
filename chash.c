@@ -36,7 +36,7 @@ int main() {
 
         if (strcmp(command, "threads") == 0) {
             num_threads = atoi(name); 
-            printf("Running %d threads\n", num_threads);
+            fprintf(outputFile, "Running %d threads\n", num_threads);
         }
 
         if (strcmp(command, "insert") == 0) {
