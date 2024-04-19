@@ -1,8 +1,13 @@
+CC      = gcc
+CFL  = -g
+RM      = rm -f
+
+default: all
+
 all: chash
 
 chash: chash.c hashdb.c rwlocks.c
-	gcc -o chash chash.c hashdb.c rwlocks.c -lpthread
-	./chash
+	$(CC) $(CFL) -o chash chash.c hashdb.c rwlocks.c -lpthread
 
 clean:
-	rm -f chash
+	$(RM) chash
