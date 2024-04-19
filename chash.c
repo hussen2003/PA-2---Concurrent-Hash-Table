@@ -55,8 +55,6 @@ int main() {
         }
     }
 
-    //fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquistions);
-    //fprintf(outputFile, "Number of lock releases: %d\n", lockReleases);
     fprintf(outputFile, "\n");
     printFinal(outputFile);
 

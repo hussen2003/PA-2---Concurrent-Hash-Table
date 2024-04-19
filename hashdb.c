@@ -30,7 +30,7 @@ uint32_t hash_function(char *str) {
 
 void insert(char *name, uint32_t salary, FILE *file) {
     fprintf(file, "WRITE LOCK ACQUIRED\n");
-    pthread_rwlock_wrlock(&rwlock);  // Lock the mutex before inserting
+    pthread_rwlock_wrlock(&rwlock); 
     num_acquistions++;
     uint32_t hash = hash_function(name);
     hashRecord* temp = hashTable;
@@ -48,7 +48,7 @@ void insert(char *name, uint32_t salary, FILE *file) {
         newnode->next = hashTable; 
         hashTable = newnode; 
     }
-    pthread_rwlock_unlock(&rwlock);  // Unlock the mutex after inserting
+    pthread_rwlock_unlock(&rwlock); 
     num_releases++;
     fprintf(file, "WRITE LOCK RELEASED\n");
 }
@@ -58,7 +58,6 @@ void delete(char *name, FILE *file) {
     fprintf(file, "WRITE LOCK ACQUIRED\n");
     pthread_rwlock_wrlock(&rwlock);  
     num_acquistions++;
-    uint32_t hash = hash_function(name);
     hashRecord *temp = hashTable, *prev = NULL;
 
     while (temp != NULL && strcmp(temp->name, name) != 0) {

@@ -1,13 +1,26 @@
-CC      = gcc
-CFL  = -g
-RM      = rm -f
+# Compiler
+CC = gcc
 
-default: all
+# Compiler Flags
+CFLAGS = -Wall -Wextra -pthread
 
-all: chash
+# Source Files
+SOURCES = chash.c hashdb.c rwlocks.c
 
-chash: chash.c hashdb.c rwlocks.c
-	$(CC) $(CFL) -o chash chash.c hashdb.c rwlocks.c -lpthread
+# Object Files
+OBJECTS = $(SOURCES:.c=.o)
+
+# Executable Name
+EXECUTABLE = chash
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) chash
+	rm -f $(OBJECTS) $(EXECUTABLE)
+
