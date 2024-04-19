@@ -22,18 +22,18 @@ WRITE LOCK ACQUIRED
 WRITE LOCK RELEASED
 PRINT
 READ LOCK ACQUIRED
-15684600, Sid Meier, 50000
-15684600, Gabe Newell, 49000
-15684600, Shigeru Miyamoto, 51000
-15684600, Hideo Kojima, 45000
-15669176, Richard Garriot, 40000
-15684600, Carol Shaw, 41000
-15684600, Roberta Williams, 45900
+17585144, Sid Meier, 50000
+17585144, Gabe Newell, 49000
+17585144, Shigeru Miyamoto, 51000
+17585144, Hideo Kojima, 45000
+17569720, Richard Garriot, 40000
+17585144, Carol Shaw, 41000
+17585144, Roberta Williams, 45900
 READ LOCK RELEASED
 SEARCH,Shigeru Miyamoto
 READ LOCK ACQUIRED
 READ LOCK RELEASED
-15684600,Shigeru Miyamoto,51000
+17585144,Shigeru Miyamoto,51000
 DELETE,Sid Meier
 WRITE LOCK ACQUIRED
 WRITE LOCK RELEASED
@@ -41,10 +41,12 @@ DELETE,Hideo Kojima
 WRITE LOCK ACQUIRED
 WRITE LOCK RELEASED
 Final Table:
-Number of lock acquisitions: 11
-Number of lock releases: 11
-15684600, Gabe Newell, 49000
-15684600, Shigeru Miyamoto, 51000
-15669176, Richard Garriot, 40000
-15684600, Carol Shaw, 41000
-15684600, Roberta Williams, 45900
+READ LOCK ACQUIRED
+Number of lock acquisitions: 12
+Number of lock releases: 12
+17585144, Gabe Newell, 49000
+17585144, Shigeru Miyamoto, 51000
+17569720, Richard Garriot, 40000
+17585144, Carol Shaw, 41000
+17585144, Roberta Williams, 45900
+READ LOCK RELEASED

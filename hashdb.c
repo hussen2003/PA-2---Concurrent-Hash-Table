@@ -107,6 +107,7 @@ hashRecord* search(char *name, FILE *file) {
 void print(FILE *file) {
     fprintf(file, "READ LOCK ACQUIRED\n");
     num_acquistions++;
+    pthread_rwlock_rdlock(&rwlock);
     for (int i = 0; i < 1000; i++) {
         hashRecord *current = hashTable[i];
         while (current != NULL) {
@@ -114,12 +115,17 @@ void print(FILE *file) {
             current = current->next;
         }
     }
+    pthread_rwlock_unlock(&rwlock);  // Release the read lock
     fprintf(file, "READ LOCK RELEASED\n");
     num_releases++;
 }
 
 
 void printFinal(FILE *file) {
+    fprintf(file, "READ LOCK ACQUIRED\n");
+    num_acquistions++;
+    pthread_rwlock_rdlock(&rwlock);
+    num_releases++;
     fprintf(file, "Number of lock acquisitions: %d\n", num_acquistions);
     fprintf(file, "Number of lock releases: %d\n", num_releases);
     for (int i = 0; i < 1000; i++) {
@@ -129,5 +135,7 @@ void printFinal(FILE *file) {
             current = current->next;
         }
     }
+    pthread_rwlock_unlock(&rwlock);  // Release the read lock
+    fprintf(file, "READ LOCK RELEASED\n");
 }
 
