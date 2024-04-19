@@ -50,6 +50,7 @@ void insert(char *name, uint32_t salary, FILE *file) {
     }
 
     pthread_rwlock_unlock(&rwlock);  // Unlock the mutex after inserting
+    num_releases++;
     fprintf(file, "WRITE LOCK RELEASED\n");
 }
 
@@ -78,12 +79,14 @@ void delete(char *name, FILE *file) {
     }
 
     pthread_rwlock_unlock(&rwlock);  // Release the write lock
+    num_releases++;
     fprintf(file, "WRITE LOCK RELEASED\n");
 }
 
 
 hashRecord* search(char *name, FILE *file) {
     fprintf(file, "READ LOCK ACQUIRED\n");
+    num_acquistions++;
     pthread_rwlock_rdlock(&rwlock);
     int index = hash_function(name);
     hashRecord *current = hashTable[index];
@@ -96,15 +99,33 @@ hashRecord* search(char *name, FILE *file) {
     }
     pthread_rwlock_unlock(&rwlock);  // Release the read lock
     fprintf(file, "READ LOCK RELEASED\n");
+    num_releases++;
     return current;
 }
 
 
 void print(FILE *file) {
+    fprintf(file, "READ LOCK ACQUIRED\n");
+    num_acquistions++;
     for (int i = 0; i < 1000; i++) {
         hashRecord *current = hashTable[i];
         while (current != NULL) {
-            fprintf(file, "%s, %d\n", current->name, current->salary);
+            fprintf(file, "%d, %s, %d\n", current->hash, current->name, current->salary);
+            current = current->next;
+        }
+    }
+    fprintf(file, "READ LOCK RELEASED\n");
+    num_releases++;
+}
+
+
+void printFinal(FILE *file) {
+    fprintf(file, "Number of lock acquisitions: %d\n", num_acquistions);
+    fprintf(file, "Number of lock releases: %d\n", num_releases);
+    for (int i = 0; i < 1000; i++) {
+        hashRecord *current = hashTable[i];
+        while (current != NULL) {
+            fprintf(file, "%u, %s, %d\n", current->hash,current->name, current->salary);
             current = current->next;
         }
     }

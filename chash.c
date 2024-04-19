@@ -40,7 +40,7 @@ int main() {
         }
 
         if (strcmp(command, "insert") == 0) {
-            fprintf(outputFile, "INSERT,%s,%s\n", name, salary);
+            fprintf(outputFile, "INSERT,%s,%s", name, salary);
             insert(name, atoi(salary), outputFile);
             lockAcquisitions++;
         } else if (strcmp(command, "delete") == 0) {
@@ -61,10 +61,10 @@ int main() {
         }
     }
 
-    fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquisitions);
-    fprintf(outputFile, "Number of lock releases: %d\n", lockReleases);
+    //fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquisitions);
+    //fprintf(outputFile, "Number of lock releases: %d\n", lockReleases);
     fprintf(outputFile, "Final Table:\n");
-    print(outputFile);
+    printFinal(outputFile);
 
     fclose(file);
     fclose(outputFile);  // Close the output.txt file
