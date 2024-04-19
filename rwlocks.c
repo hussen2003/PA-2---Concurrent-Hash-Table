@@ -1,4 +1,3 @@
-// rwlocks.c
 #include "rwlocks.h"
 
 void init_rwlock(rwlock_t *rw) {

@@ -7,25 +7,20 @@
 #include "common.h"
 #include "common_threads.h"
 
-extern hashRecord *hashTable[1000];
+extern hashRecord *hashTable;  
 
 int main() {
-    // Open the output.txt file
     FILE *outputFile = fopen("output.txt", "w");
     if (outputFile == NULL) {
         printf("Error opening file!\n");
         return 1;
     }
+    hashTable = NULL;  
 
-    // Initialize the hash table
-    for (int i = 0; i < 1000; i++) {
-        hashTable[i] = NULL;
-    }
-
-    // Read the commands.txt file and process the commands
-    FILE *file = fopen("sample_input.txt", "r");
+    //Read the commands.txt file and process the commands
+    FILE *file = fopen("commands.txt", "r");
     char line[256];
-    int lockAcquisitions = 0;
+    int lockAcquistions = 0;
     int lockReleases = 0;
 
     while (fgets(line, sizeof(line), file)) {
@@ -38,11 +33,11 @@ int main() {
             num_threads = atoi(name); 
             fprintf(outputFile, "Running %d threads\n", num_threads);
         }
-
         if (strcmp(command, "insert") == 0) {
-            fprintf(outputFile, "INSERT,%s,%s", name, salary);
+            uint32_t hash = hash_function(name);
+            fprintf(outputFile, "INSERT,%u,%s,%s",hash, name, salary);
             insert(name, atoi(salary), outputFile);
-            lockAcquisitions++;
+            lockAcquistions++;
         } else if (strcmp(command, "delete") == 0) {
             fprintf(outputFile, "DELETE,%s\n", name);
             delete(name, outputFile);
@@ -56,14 +51,13 @@ int main() {
                 fprintf(outputFile, "%s not found\n", name);
             }
         } else if (strcmp(command, "print") == 0) {
-            fprintf(outputFile, "PRINT\n");
             print(outputFile);
         }
     }
 
-    //fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquisitions);
+    //fprintf(outputFile, "\nNumber of lock acquisitions: %d\n", lockAcquistions);
     //fprintf(outputFile, "Number of lock releases: %d\n", lockReleases);
-    fprintf(outputFile, "Final Table:\n");
+    fprintf(outputFile, "\n");
     printFinal(outputFile);
 
     fclose(file);

@@ -1,4 +1,3 @@
-// rwlocks.h
 #include <pthread.h>
 #include <semaphore.h>
 
